@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dm_bof_modules" default="build">
+
+	<property name="class.dir" value="bin" />
+	<property name="build.dir" value="build" />
+
+	<target name="make-jars">
+		<delete file="${build.dir}/dm_bof_modules-api.jar" quiet="true" />
+		<jar jarfile="${build.dir}/dm_bof_modules-api.jar">
+			<fileset dir="${class.dir}">
+				<include name="io/amarinkovic/dctm/modules/IDummyModule.class" />
+			</fileset>
+		</jar>
+		<delete file="${build.dir}/dm_bof_modules.jar" quiet="true" />
+		<jar jarfile="${build.dir}/dm_bof_modules.jar">
+			<fileset dir="${class.dir}">
+				<include name="io/amarinkovic/dctm/modules/DummyModule.class" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="build" depends="make-jars">
+		<emc.importProject dmproject="dm_bof_modules" failonerror="true" />
+
+		<emc.importContent dmproject="dm_bof_modules"
+			artifactpath="Artifacts/JAR Definitions/dm_bof_modules.jardef"
+			contentfile="${build.dir}/dm_bof_modules.jar" />
+
+		<emc.importContent dmproject="dm_bof_modules"
+			artifactpath="Artifacts/JAR Definitions/dm_bof_modules-api.jardef"
+			contentfile="${build.dir}/dm_bof_modules-api.jar" />
+
+		<emc.build dmproject="dm_bof_modules" failonerror="true"/>
+
+		<delete file="${build.dir}/dm_bof_modules.dar" quiet="true" />
+		<emc.dar dmproject="dm_bof_modules" 
+			manifest="bin/dar/default.dardef.artifact" 
+			dar="build/dm_bof_modules.dar" />
+	</target>
+</project>
